@@ -2,6 +2,7 @@ package models
 
 type CreateLinkRequest struct {
 	OriginalLink string `json:"originalLink"`
+	Login        string `json:"login"`
 }
 
 type LoginRequest struct {

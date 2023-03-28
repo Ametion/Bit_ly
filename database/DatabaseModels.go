@@ -13,6 +13,6 @@ type User struct {
 	FirstName  string      `gorm:"size:15" json:"firstName"`
 	SecondName string      `gorm:"size:15" json:"secondName"`
 	Login      string      `gorm:"size:20;unique" json:"login"`
-	Password   string      `gorm:"size:100imba" json:"password"`
+	Password   string      `gorm:"size:100" json:"password"`
 	Links      []ShortLink `gorm:"foreignKey:UserID"`
 }
