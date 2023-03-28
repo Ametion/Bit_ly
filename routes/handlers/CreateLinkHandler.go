@@ -26,14 +26,15 @@ func CreateLinkHandler(con *gin.Context) {
 		return
 	}
 
-	var usr database.User
-	result := database.Database.Where("login = ?", body.Login).First(&usr)
+	value, isKeyExist := con.Get("userID")
 
-	if result.Error != nil {
-		con.JSON(400, models.ResponseModel{Code: 400, Message: "Can not find users with this login"})
+	if !isKeyExist {
+		con.JSON(401, models.ResponseModel{Code: 401, Message: "Can not find user id key, login again"})
 	}
 
-	link := database.ShortLink{ShortedLink: shortLink, OriginalLink: body.OriginalLink, UserID: usr.ID}
+	usrID, _ := value.(uint)
+
+	link := database.ShortLink{ShortedLink: shortLink, OriginalLink: body.OriginalLink, UserID: usrID}
 
 	database.Database.Create(&link)
 	con.JSON(201, models.ResponseModel{Code: 201, Message: fmt.Sprintf("Your link is ready - localhost:5000/%s", link.ShortedLink)})
