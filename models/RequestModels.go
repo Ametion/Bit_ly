@@ -4,6 +4,10 @@ type CreateLinkRequest struct {
 	OriginalLink string `json:"originalLink"`
 }
 
+type AccountInfoRequest struct {
+	Login string `json:"login"`
+}
+
 type LoginRequest struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`

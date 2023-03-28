@@ -32,7 +32,7 @@ func CreateLinkHandler(con *gin.Context) {
 		con.JSON(401, models.ResponseModel{Code: 401, Message: "Can not find user id key, login again"})
 	}
 
-	usrID, _ := value.(uint)
+	usrID := value.(uint)
 
 	link := database.ShortLink{ShortedLink: shortLink, OriginalLink: body.OriginalLink, UserID: usrID}
 

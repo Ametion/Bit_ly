@@ -15,23 +15,23 @@ import (
 )
 
 func LoginHandler(con *gin.Context) {
-	var loginBody models.LoginRequest
+	var body models.LoginRequest
 
-	if bodyError := con.ShouldBindJSON(&loginBody); bodyError != nil {
+	if bodyError := con.ShouldBindJSON(&body); bodyError != nil {
 		con.JSON(400, models.ResponseModel{Code: 400, Message: "Error while getting parameters from body"})
 		return
 	}
 
 	var usr database.User
 
-	result := database.Database.Where("login = ?", loginBody.Login).First(&usr)
+	result := database.Database.Where("login = ?", body.Login).First(&usr)
 
 	if result != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		con.JSON(404, models.ResponseModel{Code: 404, Message: "Can not find user with presented login"})
 		return
 	}
 
-	hashError := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(loginBody.Password))
+	hashError := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 
 	if hashError != nil {
 		con.JSON(400, models.ResponseModel{Code: 400, Message: "Error while check password"})

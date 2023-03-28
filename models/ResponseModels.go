@@ -8,3 +8,12 @@ type ResponseModel struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
+
+type LinksResponse struct {
+	OriginalLink string `json:"originalLink"`
+	ShortedLink  string `json:"shortedLink"`
+}
+
+type AccountInfoResponse struct {
+	Links []LinksResponse `json:"links"`
+}

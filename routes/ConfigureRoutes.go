@@ -17,6 +17,7 @@ func ConfigureRoutes() {
 	authorized.Use(middleware.AuthMiddleware())
 	{
 		authorized.POST("/link", handlers.CreateLinkHandler)
+		authorized.GET("/account", handlers.AccountInfoHandler)
 	}
 
 	r.Run(":5000")

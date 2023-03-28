@@ -8,23 +8,23 @@ import (
 )
 
 func RegisterHandler(con *gin.Context) {
-	var registerBody models.RegisterRequest
+	var body models.RegisterRequest
 
-	if bodyError := con.ShouldBindJSON(&registerBody); bodyError != nil {
+	if bodyError := con.ShouldBindJSON(&body); bodyError != nil {
 		con.JSON(400, models.ResponseModel{Code: 400, Message: "Error while getting parameters from body"})
 		return
 	}
 
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(registerBody.Password), bcrypt.DefaultCost)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 
 	if err != nil {
 		panic("error while hashing")
 	}
 
 	usr := database.User{
-		FirstName:  registerBody.FirstName,
-		SecondName: registerBody.SecondName,
-		Login:      registerBody.Login,
+		FirstName:  body.FirstName,
+		SecondName: body.SecondName,
+		Login:      body.Login,
 		Password:   string(hashedPass),
 	}
 
