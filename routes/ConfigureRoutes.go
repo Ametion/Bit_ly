@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"bit-ly/middleware"
 	"bit-ly/routes/handlers"
 	"github.com/gin-gonic/gin"
 )
@@ -8,8 +9,16 @@ import (
 func ConfigureRoutes() {
 	r := gin.Default()
 
-	r.POST("/link", handlers.CreateLinkHandler)
 	r.GET("/:link", handlers.RedirectLinkHandler)
+	r.POST("/login", handlers.LoginHandler)
+	r.POST("/register", handlers.RegisterHandler)
+
+	authorized := r.Group("/")
+	authorized.Use(middleware.AuthMiddleware())
+	{
+		authorized.POST("/link", handlers.CreateLinkHandler)
+		authorized.GET("/account", handlers.AccountInfoHandler)
+	}
 
 	r.Run(":5000")
 }

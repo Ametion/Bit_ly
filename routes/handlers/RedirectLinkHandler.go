@@ -11,7 +11,7 @@ func RedirectLinkHandler(con *gin.Context) {
 
 	var link database.ShortLink
 
-	result := database.Database.Where("short_link = ?", shortLink).First(&link)
+	result := database.Database.Where("shorted_link = ?", shortLink).First(&link)
 
 	if result.Error != nil {
 		con.JSON(404, models.ResponseModel{Code: 404, Message: "Can not find any link with this shortcut"})
