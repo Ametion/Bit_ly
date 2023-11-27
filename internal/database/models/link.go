@@ -1,4 +1,4 @@
-package database
+package database_models
 
 type ShortLink struct {
 	ID           uint   `gorm:"primaryKey" json:id`

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"bit-ly/database"
-	"bit-ly/models"
+	"bit-ly/internal/database"
+	database_models "bit-ly/internal/database/models"
+	"bit-ly/internal/models"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -11,34 +12,34 @@ import (
 	"time"
 )
 
-func CreateLinkHandler(con *gin.Context) {
+func CreateLinkHandler(context *gin.Context) {
 	var body models.CreateLinkRequest
 
-	if err := con.ShouldBindJSON(&body); err != nil {
-		con.JSON(400, models.ResponseModel{Code: 400, Message: "Error while getting parameters from body"})
+	if err := context.ShouldBindJSON(&body); err != nil {
+		context.JSON(400, models.Response{Code: 400, Message: "Error while getting parameters from body"})
 		return
 	}
 
 	shortLink, err := findUniqueShortLink()
 
 	if err != nil {
-		con.JSON(400, models.ResponseModel{Code: 400, Message: "Error while creating your short link"})
+		context.JSON(400, models.Response{Code: 400, Message: "Error while creating your short link"})
 		return
 	}
 
-	link := database.ShortLink{ShortLink: shortLink, OriginalLink: body.OriginalLink}
+	link := database_models.ShortLink{ShortLink: shortLink, OriginalLink: body.OriginalLink}
 
-	database.Database.Create(&link)
-	con.JSON(201, models.ResponseModel{Code: 201, Message: fmt.Sprintf("Your link is ready - localhost:5000/%s", link.ShortLink)})
+	database.GetConnection().Create(&link)
+	context.JSON(201, models.Response{Code: 201, Message: fmt.Sprintf("Your link is ready - localhost:5000/%s", link.ShortLink)})
 }
 
 func findUniqueShortLink() (string, error) {
 	var shortLink string
-	var oldLink database.ShortLink
+	var oldLink database_models.ShortLink
 
 	for {
 		shortLink = generateRandomString(10)
-		result := database.Database.Where("short_link = ?", shortLink).First(&oldLink)
+		result := database.GetConnection().Where("short_link = ?", shortLink).First(&oldLink)
 
 		if result.Error != nil {
 			if !errors.Is(result.Error, gorm.ErrRecordNotFound) {

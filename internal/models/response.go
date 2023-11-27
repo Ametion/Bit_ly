@@ -1,6 +1,6 @@
 package models
 
-type ResponseModel struct {
+type Response struct {
 	Code    int
 	Message string
 }
